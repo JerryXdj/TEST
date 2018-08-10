@@ -1,0 +1,10 @@
+@charset "utf-8";
+body { margin:0px; padding:0px; background:#276ebe; height:100%; font-size:12px;}
+html {height:100%; }
+img { border:0px;}
+input{ border:none; height:24px; font-size:13px; font-family:Arial,"宋体"; color:#333;padding-left:5px; width:165px; background:none}
+
+
+#tinybox{position:absolute; display:none; padding:10px; background:#fff; border:10px solid #e3e3e3; z-index:2000;}
+#tinymask{position:absolute; display:none; top:0; left:0; height:100%; width:100%; background:#000000; z-index:1500;}
+#tinycontent{background:#ffffff; font-size:1.1em;background:#ffffff ; text-align:center; font-family: Arial; line-height:20px}

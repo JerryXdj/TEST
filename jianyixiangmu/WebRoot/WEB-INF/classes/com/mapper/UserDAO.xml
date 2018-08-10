@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserDAO" >
+	<insert id="save_Obj" parameterType="UserDTO" >
+	insert into
+	tb_user(
+	ID,
+	NAME,
+	SEX,
+	AGE,
+	ADDRESS,
+	STATE,
+	ADULT,
+	PASSWORD)
+	values(
+   sq_user.NextVal,<!--取出序列里的值，作为主键传入 -->
+	#{name},
+	#{sex},
+	#{age},
+	#{address},
+	#{state},
+	#{adult},
+	#{password}
+	)
+	</insert>
+
+	<!-- <delete id="delete_Obj" parameterType="java.util.Map">
+		delete from
+		tb_user
+		where id=#{id}
+	</delete> -->
+	
+<update id="delete_Obj" parameterType="java.util.Map">
+	update
+	tb_user t
+	set
+	t.state=#{state}
+	where
+		<if test="null!=id and ''!=id">
+			 t.id=#{id}
+		</if>
+		<if test="null!=adult and ''!=adult">
+			 t.adult=#{adult}
+		</if>
+	</update>
+
+	<update id="update_Obj" parameterType="UserDTO">
+	update
+	tb_user t
+	set
+	t.name=#{name},
+	t.sex=#{sex},
+	t.age=#{age},
+	t.address=#{address},
+	t.state=#{state},
+	t.adult=#{adult},
+	t.password=#{password}
+	where 1=1
+		<if test="null!=id and ''!=id">
+			and t.id=#{id}
+		</if>
+	</update>
+  
+	
+<select id="query_Page" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT *
+		FROM
+	  	(SELECT T.*, ROWNUM AS rowno
+	   	 FROM       
+	        (select  
+	        A.ID,
+	        A.NAME,
+	        A.SEX,
+	        A.AGE,
+	        A.ADDRESS,
+	        A.ADULT,
+	        A.PASSWORD
+	      FROM TB_USER A
+	      WHERE 1=1
+	      and a.state = 0 
+		  <if test="null != id and '' != id">
+		  	and A.ID = #{id}
+		  </if>
+		  <if test="null != name and '' != name">
+			and A.name like ${name}
+			or A.address like ${name}
+		  </if>
+		  <if test="null != sex and '' != sex">
+			and A.sex = #{sex}
+		  </if>
+		  <if test="null != age and '' != age">
+			and A.age = #{age}
+		  </if>
+		  <if test="null != adult and '' != adult">
+			and A.adult = #{adult}
+		  </if>
+		  <if test="null != password and '' != password">
+			and A.password = #{password}
+		  </if>
+		 ORDER BY TO_NUMBER(A.ID) ASC
+		 ) T
+		<![CDATA[
+		WHERE ROWNUM <= #{end})
+		WHERE rowno > #{beg}
+		]]>
+	</select>
+	
+<!--查询页码 -->
+	<select id="query_count" resultType="int" parameterType="java.util.Map">
+	  SELECT COUNT(1) 
+	  FROM TB_USER A
+      WHERE 1=1  
+      and a.state = 0
+	  <if test="null != id and '' != id">
+	  	and A.ID = #{id}
+	  </if>  
+	  <if test="null != name and '' != name">
+		and A.name like ${name}
+	  </if>
+	<if test="null != sex and '' != sex">
+		and A.sex = #{sex}
+	  </if>
+	  <if test="null != age and '' != age">
+		and A.age = #{age}
+	  </if>
+	   <if test="null != address and '' != address">
+		and A.address like ${address}
+	  </if>
+	    <if test="null != adult and '' != adult">
+		and A.adult = #{adult}
+	  </if>
+	</select>
+
+<select id="queryByMap" resultType="UserDTO" parameterType="java.util.Map">
+select * from tb_user t 
+<where>
+ <if test="null != id and '' != id">
+		and  t.id=#{id}  
+	  </if>
+	   <if test="null != password and '' != password">
+		and t.password = #{password}
+	  </if>
+</where>
+</select>
+
+</mapper>
